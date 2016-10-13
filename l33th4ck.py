@@ -1,10 +1,11 @@
 import sha3
 from os.path import commonprefix
 import random, string
+import sys
 
 ID = '112901008'
 hash_slinging_slasher = sha3.SHA3224()
-file_name = 'h4ck.txt'
+file_name = 'h4ck_{0}.txt'.format(sys.argv[1])
 
 hashes = []
 
