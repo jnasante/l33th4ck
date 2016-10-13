@@ -2,6 +2,9 @@ import sha3
 from os.path import commonprefix
 import random, string
 import sys
+import base64
+import smtplib
+from email.mime.text import MIMEText
 
 ID = '112901008'
 hash_slinging_slasher = sha3.SHA3224()
@@ -13,12 +16,8 @@ values_attempted = set()
 k_max = 0
 k_hashes = []
 k_map = {}
-current_range = (1, 1)
+current_range = (1, 50)
 
-
-def read_config():
-	global current_range
-	current_range = (1, 50)
 
 def get_random_string():
 	global max_range
@@ -27,6 +26,37 @@ def get_random_string():
 
 def get_random_with_prefix():
 	return ID + get_random_string()
+
+def convert_to_value(hashed):
+	return ID+hashed.decode('utf-8')
+
+
+def pollard_rho():
+	seed = get_random_with_prefix()
+	iterations = 0
+	tortoise = seed
+	tortoise_hash = hash(seed)
+	hare = seed
+	hare_hash = hash(seed)
+
+	while (True):
+		if (iterations % 10000000 == 0):
+			print('\nIteration: {0}\n'.format(iterations))
+		iterations += 1
+
+		tortoise = convert_to_value(tortoise_hash)
+		tortoise_hash = hash(tortoise)
+		for _ in range(2):
+			hare = convert_to_value(hare_hash)
+			hare_hash = hash(hare)
+
+		hash_array = [tortoise_hash, hare_hash]
+		k = getK(hash_array)
+		if (k > k_max):
+			k_map[tortoise_hash] = tortoise
+			k_map[hare_hash] = hare
+			found_new_k(k, hash_array)
+
 
 def insert_hash(hashed):
 	global k_max
@@ -46,17 +76,43 @@ def insert_hash(hashed):
 			continue;
 		k = getK(hashes[i:i+2])
 		if (k > k_max):
-			k_max = k
-			k_hashes = hashes[i:i+2]
-			print_results(k)
+			found_new_k(k, hashes[i:i+2])
+
+def found_new_k(k, hash_array):
+	global k_max
+	global k_hashes
+
+	k_max = k
+	k_hashes = hash_array
+	print_results(k)
+
+def send_email(content):
+	# Create a text/plain message
+	msg = MIMEText(content)
+
+	# me == the sender's email address
+	# you == the recipient's email address
+	msg['Subject'] = 'Found another k'
+	msg['From'] = 'jnasante@ou.edu'
+	msg['To'] = 'jnasante@ou.edu'
+
+	# Send the message via our own SMTP server, but don't include the
+	# envelope header.
+	s = smtplib.SMTP('localhost')
+	s.sendmail(me, ['jnasante@ou.edu'], msg.as_string())
+	s.quit()
 
 def print_results(k):
 	values = k_map[k_hashes[0]], k_map[k_hashes[1]]
 	hashes = k_hashes[0], k_hashes[1]
 
-	print('FOUND NEW K: {0}'.format(k))
-	print('Strings: {0}, {1}'.format(values[0], values[1]))
-	print('Hashes: {0}, {1}\n'.format(hashes[0], hashes[1]))
+	print_k = 'FOUND NEW K: {0}'.format(k)
+	print_strings = 'Strings: {0}, {1}'.format(values[0], values[1])
+	print_hashes = 'Hashes: {0}, {1}'.format(hashes[0], hashes[1])
+	fanfare = '\n{0}\n{1}\n{2}\n'.format(print_k, print_strings, print_hashes)
+
+	print(fanfare)
+	# send_email(fanfare)
 
 	# Log to file
 	with open(file_name, 'a') as log:
@@ -86,10 +142,9 @@ def hash(string):
 	return hash_slinging_slasher.hexdigest()
 
 def start_hacking():
-	read_config()
 	while (True):
 		generate_and_hash()
 
 # Let's do this!!
-start_hacking()
-
+# start_hacking()
+pollard_rho()
