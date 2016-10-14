@@ -42,7 +42,6 @@ def pollard_rho():
 	while (True):
 		if (iterations % 10000000 == 0):
 			print('\nIteration: {0}\n'.format(iterations))
-		iterations += 1
 
 		tortoise = convert_to_value(tortoise_hash)
 		tortoise_hash = hash(tortoise)
@@ -50,13 +49,18 @@ def pollard_rho():
 			hare = convert_to_value(hare_hash)
 			hare_hash = hash(hare)
 
-		hash_array = [tortoise_hash, hare_hash]
-		k = getK(hash_array)
-		if (k > k_max):
-			k_map[tortoise_hash] = tortoise
-			k_map[hare_hash] = hare
-			found_new_k(k, hash_array)
+			# Ensure we don't have a false positive on the very first identical ones
+			if (iterations == 0):
+				continue
 
+			hash_array = [tortoise_hash, hare_hash]
+			k = getK(hash_array)
+			if (k > k_max):
+				k_map[tortoise_hash] = tortoise
+				k_map[hare_hash] = hare
+				found_new_k(k, hash_array)
+
+		iterations += 1
 
 def insert_hash(hashed):
 	global k_max
