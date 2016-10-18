@@ -30,7 +30,6 @@ def get_random_with_prefix():
 def convert_to_value(hashed):
 	return ID+hashed.decode('utf-8')
 
-
 def pollard_rho():
 	seed = get_random_with_prefix()
 	iterations = 0
