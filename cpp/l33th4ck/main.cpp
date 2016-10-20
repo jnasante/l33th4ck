@@ -65,7 +65,8 @@ void printResults(int k) {
     // Write to file
     ofstream logFile;
     logFile.open(fileName);
-    logFile << fanfare;
+    logFile.flush();
+    logFile << fanfare << endl;
     logFile.close();
 }
 
@@ -74,6 +75,51 @@ void foundNewK(int k, string hashArray[]) {
     kHashes[0] = hashArray[0];
     kHashes[1] = hashArray[1];
     printResults(k);
+}
+
+void checkKResult(string tortoise, string tortoiseHash, string hare, string hareHash) {
+    string hashArray[] = { tortoiseHash, hareHash };
+    int k = getK(hashArray);
+    if (k > kMax) {
+        kMap[tortoiseHash] = tortoise;
+        kMap[hareHash] = hare;
+        foundNewK(k, hashArray);
+    }
+}
+
+void brent() {
+    SHA3 sha3 (SHA3 :: Bits224);
+    
+    string seed = getRandomWithPrefix();
+    int iterations = 0;
+    int hare_steps = 0;
+    int step_threshold = 2;
+    string tortoise = seed;
+    string tortoiseHash = sha3(seed);
+    string hare = seed;
+    string hareHash = sha3(seed);
+    
+    while (true) {
+        if (iterations % 1000000000 == 0) {
+            cout << "\nIteration: " << iterations << "\n" << endl;
+        }
+        
+        hare = addPrefix(hareHash);
+        hareHash = sha3(hare);
+        hare_steps++;
+        
+        checkKResult(tortoise, tortoiseHash, hare, hareHash);
+
+        if (hare_steps == step_threshold) {
+            hare_steps = 0;
+            step_threshold *= 2;
+            tortoise = hare;
+            tortoiseHash = hareHash;
+            cout << "Step threshold: " << step_threshold << "\n" << endl;
+        }
+        
+        iterations++;
+    }
 }
 
 void pollardRho() {
@@ -95,18 +141,7 @@ void pollardRho() {
             hare = addPrefix(hareHash);
             hareHash = sha3(hare);
             
-            // Ensure we don't have false positive on the very first identical ones
-            if (iterations == 0) {
-                continue;
-            }
-            
-            string hashArray[] = { tortoiseHash, hareHash };
-            int k = getK(hashArray);
-            if (k > kMax) {
-                kMap[tortoiseHash] = tortoise;
-                kMap[hareHash] = hare;
-                foundNewK(k, hashArray);
-            }
+            checkKResult(tortoise, tortoiseHash, hare, hareHash);
         }
 
         tortoise = addPrefix(tortoiseHash);
@@ -120,12 +155,13 @@ int main(int argc, const char * argv[]) {
     cout << "Hacking into mainframe..." << endl;
     
     std::ostringstream oss;
-    oss << argv[1] << "_h4ck" << ".txt";
+    oss << argv[1] << "_h4ck.txt";
     fileName = oss.str();
     
     randomString = argv[1];
     
-    pollardRho();
+//    pollardRho();
+    brent();
     
     return 0;
 }
