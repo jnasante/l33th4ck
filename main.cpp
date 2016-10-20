@@ -22,8 +22,6 @@ string randomString = "A6f7Dy34ez";
 int kMax = 0;
 string kHashes[] = { "", "" };
 map<string, string> kMap;
-int minRange = 1;
-int maxRange = 10;
 
 string addPrefix(string value) {
     return ID + value;
