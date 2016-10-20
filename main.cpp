@@ -91,9 +91,9 @@ void brent() {
     SHA3 sha3 (SHA3 :: Bits224);
     
     string seed = getRandomWithPrefix();
-    int iterations = 0;
-    int hare_steps = 0;
-    int step_threshold = 2;
+    long iterations = 0;
+    long hare_steps = 0;
+    long step_threshold = 2;
     string tortoise = seed;
     string tortoiseHash = sha3(seed);
     string hare = seed;
