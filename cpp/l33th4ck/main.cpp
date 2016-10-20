@@ -158,7 +158,7 @@ int main(int argc, const char * argv[]) {
     oss << argv[1] << "_h4ck.txt";
     fileName = oss.str();
     
-    randomString = argv[1];
+    randomString = argv[2];
     
 //    pollardRho();
     brent();
