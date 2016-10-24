@@ -12,7 +12,6 @@
 #include <map>
 #include <string>
 #include "sha3.h"
-#include "btree.cpp"
 
 using namespace std;
 
@@ -188,6 +187,8 @@ int main(int argc, const char * argv[]) {
     fileName = oss.str();
     
     randomString = argv[2];
+    
+    
     
 //    pollardRho();
     brent();
