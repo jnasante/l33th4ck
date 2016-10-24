@@ -12,6 +12,7 @@
 #include <map>
 #include <string>
 #include "sha3.h"
+#include "btree.cpp"
 
 using namespace std;
 
