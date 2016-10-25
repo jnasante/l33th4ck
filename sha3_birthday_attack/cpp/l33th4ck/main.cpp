@@ -24,7 +24,7 @@ string kHashes[] = { "", "" };
 map<string, string> kMap;
 
 string addPrefix(string value) {
-    return ID + value;
+    return ID + value.substr(0, 15);
 }
 
 string getRandomWithPrefix() {
@@ -192,9 +192,6 @@ int main(int argc, const char * argv[]) {
     
 //    pollardRho();
     brent();
-    
-//    string hashArray[] = { "0e5928cb450b2e232923a2c4dd1d0d7a068e2720c05f76a5e8808a02", "0e5928cb455c27708d53abebf845ab7c6d0ed900a9a278161ab38f09" };
-//    cout << getK(hashArray) << endl;
     
     return 0;
 }

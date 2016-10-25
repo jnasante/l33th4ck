@@ -1,0 +1,3 @@
+Found collision!
+String: ASAN1008'y=A\XMRg
+Hash: 000023d0a18a81e084558dfb4773d136e543a12e

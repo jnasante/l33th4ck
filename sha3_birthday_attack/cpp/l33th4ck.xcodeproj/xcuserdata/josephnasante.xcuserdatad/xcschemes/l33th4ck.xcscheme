@@ -47,7 +47,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/josephnasante/OneDrive/Classes/Computer Security/Midterm/l33th4ck/cpp/l33th4ck"
+      customWorkingDirectory = "/Users/josephnasante/OneDrive/Classes/Computer Security/Midterm/l33th4ck/sha3_birthday_attack/cpp/l33th4ck"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
