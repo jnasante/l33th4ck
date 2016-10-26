@@ -31,12 +31,6 @@ RC = [
 	'1000000000000000000000000000000010000000000000001000000000001000'
 ]
 
-def convert_RC():
-	global RC
-	for i in range(len(RC)):
-		RC[i] = binascii.unhexlify(RC[i]).decode('utf-8')
-		print(RC[i])
-
 def bitwise_and(str1, str2):
 	return '{0:064b}'.format(int(str1, 2) & int(str2, 2))
 

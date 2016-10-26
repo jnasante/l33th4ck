@@ -24,7 +24,7 @@ string kHashes[] = { "", "" };
 map<string, string> kMap;
 
 string addPrefix(string value) {
-    return ID + value.substr(0, 15);
+    return ID + value;
 }
 
 string getRandomWithPrefix() {
@@ -187,8 +187,6 @@ int main(int argc, const char * argv[]) {
     fileName = oss.str();
     
     randomString = argv[2];
-    
-    
     
 //    pollardRho();
     brent();

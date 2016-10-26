@@ -18,7 +18,6 @@ k_map = {}
 current_range = (1, 20)
 
 def get_random_string():
-	global max_range
 	length = random.randint(current_range[0], current_range[1])
 	return ''.join(random.choice(string.printable[:-6]) for i in range(length))
 
